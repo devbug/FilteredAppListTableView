@@ -150,6 +150,8 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 		[displayName release];
 		
 		UIImage *icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultAppIcon~iphone.png"];
+		if (icon == nil)
+			icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultAppIcon.png"];
 		self.imageView.image = icon;
 		[icon release];
 		
@@ -159,18 +161,20 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 
 - (void)loadIcon {
 	if (!isIconLoaded && displayId != nil) {
-		NSThread *loadThread = [[NSThread alloc] initWithTarget:self selector:@selector(setIcon:) object:displayId];
+		NSThread *loadThread = [[NSThread alloc] initWithTarget:self selector:@selector(setIcon) object:nil];
 		[loadThread start];
 		[loadThread release];
 	}
 }
 
-- (void)setIcon:(NSString *)identifier {
+- (void)setIcon {
 	UIImage *icon = nil;
+	
+	if (displayId == nil) return;
 	
 	if (isFirmware3x) {
 		// Firmware < 4.0
-		NSString *iconPath = SBSCopyIconImagePathForDisplayIdentifier(identifier);
+		NSString *iconPath = SBSCopyIconImagePathForDisplayIdentifier(displayId);
 		if (iconPath != nil) {
 			icon = [UIImage imageWithContentsOfFile:iconPath];
 			[iconPath release];
@@ -178,7 +182,7 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 	} else {
 		// Firmware >= 4.0
 		if (SBSCopyIconImagePNGDataForDisplayIdentifier != NULL) {
-			NSData *data = (*SBSCopyIconImagePNGDataForDisplayIdentifier)(identifier);
+			NSData *data = (*SBSCopyIconImagePNGDataForDisplayIdentifier)(displayId);
 			if (data != nil) {
 				icon = [UIImage imageWithData:data];
 				[data release];

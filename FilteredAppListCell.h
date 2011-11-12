@@ -71,7 +71,7 @@ enum {
 @property(nonatomic) BOOL enableForceType;
 
 - (void)loadIcon;
-- (void)setIcon:(NSString *)identifier;
+- (void)setIcon;
 - (FilteredListType)toggle;
 
 @end
