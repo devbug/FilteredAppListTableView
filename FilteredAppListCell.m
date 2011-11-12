@@ -154,6 +154,7 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 			icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultAppIcon.png"];
 		self.imageView.image = icon;
 		[icon release];
+		isIconLoaded = NO;
 		
 		filteredListType = FilteredListNone;
 	}
@@ -176,7 +177,7 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 		// Firmware < 4.0
 		NSString *iconPath = SBSCopyIconImagePathForDisplayIdentifier(displayId);
 		if (iconPath != nil) {
-			icon = [UIImage imageWithContentsOfFile:iconPath];
+			icon = [[UIImage alloc] initWithContentsOfFile:iconPath];
 			[iconPath release];
 		}
 	} else {
@@ -184,7 +185,7 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 		if (SBSCopyIconImagePNGDataForDisplayIdentifier != NULL) {
 			NSData *data = (*SBSCopyIconImagePNGDataForDisplayIdentifier)(displayId);
 			if (data != nil) {
-				icon = [UIImage imageWithData:data];
+				icon = [[UIImage alloc] initWithData:data];
 				[data release];
 			}
 		}
@@ -192,6 +193,7 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 	
 	if (icon) {
 		self.imageView.image = icon;
+		[icon release];
 		
 		isIconLoaded = YES;
 	}
