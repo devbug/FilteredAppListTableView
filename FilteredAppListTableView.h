@@ -46,10 +46,15 @@
 @property (nonatomic, assign) id<FilteredAppListDelegate> delegate;
 @property (nonatomic, copy) NSString *hudLabelText;
 @property (nonatomic, copy) NSString *hudDetailsLabelText;
+@property (nonatomic, retain) UIColor *noneTextColor;
+@property (nonatomic, retain) UIColor *normalTextColor;
+@property (nonatomic, retain) UIColor *forceTextColor;
 
 - (id)initForContentSize:(CGSize)size delegate:(id<FilteredAppListDelegate>)delegate filteredAppType:(FilteredAppType)type enableForce:(BOOL)enableForce;
 - (UIView *)view;
 - (void)loadFilteredList;
+- (void)setDefaultTextColor;
+- (void)setTextColors:(UIColor *)noneColor normalTextColor:(UIColor *)normalColor forceTextColor:(UIColor *)forceColor;
 - (void)dealloc;
 
 @end

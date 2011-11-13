@@ -54,6 +54,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 
 @synthesize tableView, delegate, filteredAppType, enableForceType;
 @synthesize hudLabelText, hudDetailsLabelText;
+@synthesize noneTextColor, normalTextColor, forceTextColor;
 
 - (id)initForContentSize:(CGSize)size delegate:(id<FilteredAppListDelegate>)_delegate filteredAppType:(FilteredAppType)type enableForce:(BOOL)enableForce {
 	if ((self = [super init]) != nil) {
@@ -63,6 +64,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 		_list = nil;
 		self.hudLabelText = @"Loading Data";
 		self.hudDetailsLabelText = @"Please wait...";
+		[self setDefaultTextColor];
 		
 		window = [[UIApplication sharedApplication] keyWindow];
 		
@@ -78,6 +80,18 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	return tableView;
 }
 
+- (void)setDefaultTextColor {
+	self.noneTextColor = [UIColor blackColor];
+	self.normalTextColor = [UIColor colorWithRed:81/255.0 green:102/255.0 blue:145/255.0 alpha:1];
+	self.forceTextColor = [UIColor colorWithRed:181/255.0 green:181/255.0 blue:181/255.0 alpha:1];
+}
+
+- (void)setTextColors:(UIColor *)noneColor normalTextColor:(UIColor *)normalColor forceTextColor:(UIColor *)forceColor {
+	self.noneTextColor = noneColor;
+	self.normalTextColor = normalColor;
+	self.forceTextColor = forceColor;
+}
+
 - (void)dealloc {
 	MBProgressHUD *HUD = (MBProgressHUD *)[window viewWithTag:HUD_TAG];
 	[HUD removeFromSuperview];
@@ -85,6 +99,9 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	[tableView release];
 	self.hudLabelText = nil;
 	self.hudDetailsLabelText = nil;
+	self.noneTextColor = nil;
+	self.normalTextColor = nil;
+	self.forceTextColor = nil;
 	[_list release];
 	
 	[super dealloc];
@@ -171,6 +188,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	
 	cell.enableForceType = enableForceType;
 	cell.displayId = identifier;
+	[cell setTextColors:noneTextColor normalTextColor:normalTextColor forceTextColor:forceTextColor];
 	
 	cell.filteredListType = [delegate filteredListTypeForIdentifier:identifier];
 	

@@ -49,11 +49,12 @@
 #include <dlfcn.h>
 
 
-typedef NSInteger FilteredAppType;
+typedef NSUInteger FilteredAppType;
 enum {
-	FilteredAppUsers =	0x01,
-	FilteredAppSystem = 0x10,
-	FilteredAppAll =	0x11
+	FilteredAppUsers	= 0x00000001,
+	FilteredAppSystem	= 0x00000010,
+	FilteredAppWebapp	= 0x00000100,
+	FilteredAppAll		= 0x11111111
 };
 
 typedef NSInteger FilteredListType;
@@ -65,14 +66,19 @@ enum {
 
 @interface FilteredAppListCell : UITableViewCell
 
-@property(nonatomic, copy) NSString *displayId;
-@property(nonatomic) FilteredListType filteredListType;
-@property(nonatomic) BOOL isIconLoaded;
-@property(nonatomic) BOOL enableForceType;
+@property (nonatomic, copy) NSString *displayId;
+@property (nonatomic) FilteredListType filteredListType;
+@property (nonatomic) BOOL isIconLoaded;
+@property (nonatomic) BOOL enableForceType;
+@property (nonatomic, retain) UIColor *noneTextColor;
+@property (nonatomic, retain) UIColor *normalTextColor;
+@property (nonatomic, retain) UIColor *forceTextColor;
 
 - (void)loadIcon;
 - (void)setIcon;
 - (FilteredListType)toggle;
+- (void)setDefaultTextColor;
+- (void)setTextColors:(UIColor *)noneColor normalTextColor:(UIColor *)normalColor forceTextColor:(UIColor *)forceColor;
 
 @end
 

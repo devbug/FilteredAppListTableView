@@ -89,7 +89,10 @@ NSArray *applicationDisplayIdentifiersForMode(FilteredAppType type)
 		for (NSString *identifier in array) {
 			FilteredAppType isType = FilteredAppUsers;
 			for (NSString *systemIdentifier in systemAppArr) {
-				if ([identifier hasPrefix:systemIdentifier]) {
+				if ([identifier isEqualToString:@"com.apple.webapp"]) {
+					isType = FilteredAppWebapp;
+					break;
+				} else if ([identifier hasPrefix:systemIdentifier]) {
 					isType = FilteredAppSystem;
 					break;
 				}
@@ -102,9 +105,9 @@ NSArray *applicationDisplayIdentifiersForMode(FilteredAppType type)
 			//        folders are apps, but when used with CategoriesSB they are
 			//        non-apps.
 			if (identifier
-				&& ![identifier hasPrefix:@"jp.ashikase.springjumps."]
-				&& ![identifier isEqualToString:@"com.iptm.bigboss.sbsettings"]
-				&& ![identifier isEqualToString:@"com.apple.webapp"])
+				&& ![identifier hasPrefix:@"jp.ashikase.springjumps."])
+				//&& ![identifier isEqualToString:@"com.iptm.bigboss.sbsettings"]
+				//&& ![identifier isEqualToString:@"com.apple.webapp"])
 				[identifiers addObject:identifier];
 		}
 	}
@@ -128,6 +131,7 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 @implementation FilteredAppListCell
 
 @synthesize displayId, filteredListType, isIconLoaded, enableForceType;
+@synthesize noneTextColor, normalTextColor, forceTextColor;
 
 + (void)initialize
 {
@@ -216,9 +220,23 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 	return filteredListType;
 }
 
-- (void)layoutSubviews
-{
+- (void)setDefaultTextColor {
+	self.noneTextColor = [UIColor blackColor];
+	self.normalTextColor = [UIColor colorWithRed:81/255.0 green:102/255.0 blue:145/255.0 alpha:1];
+	self.forceTextColor = [UIColor colorWithRed:181/255.0 green:181/255.0 blue:181/255.0 alpha:1];
+}
+
+- (void)setTextColors:(UIColor *)noneColor normalTextColor:(UIColor *)normalColor forceTextColor:(UIColor *)forceColor {
+	self.noneTextColor = noneColor;
+	self.normalTextColor = normalColor;
+	self.forceTextColor = forceColor;
+}
+
+- (void)layoutSubviews {
 	[super layoutSubviews];
+	
+	if (noneTextColor == nil || normalTextColor == nil || forceTextColor == nil)
+		[self setDefaultTextColor];
 	
 	CGSize size = self.bounds.size;
 	self.imageView.frame = CGRectMake(4.0f, 4.0f, size.height - 8.0f, size.height - 8.0f);
@@ -227,18 +245,27 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 	switch (filteredListType) {
 		case FilteredListNormal:
 			self.accessoryType = UITableViewCellAccessoryCheckmark;
-			self.textLabel.textColor = [UIColor colorWithRed:81/255.0 green:102/255.0 blue:145/255.0 alpha:1];
+			self.textLabel.textColor = normalTextColor;
 			break;
 		case FilteredListForce:
 			self.accessoryType = UITableViewCellAccessoryNone;
-			self.textLabel.textColor = [UIColor colorWithRed:181/255.0 green:181/255.0 blue:181/255.0 alpha:1];
+			self.textLabel.textColor = forceTextColor;
 			break;
 		case FilteredListNone:
 		default:
 			self.accessoryType = UITableViewCellAccessoryNone;
-			self.textLabel.textColor = [UIColor blackColor];
+			self.textLabel.textColor = noneTextColor;
 			break;
 	}
+}
+
+- (void)dealloc {
+	[displayId release];
+	self.noneTextColor = nil;
+	self.normalTextColor = nil;
+	self.forceTextColor = nil;
+	
+	[super dealloc];
 }
 
 @end
