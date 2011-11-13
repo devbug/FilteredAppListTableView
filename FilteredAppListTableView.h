@@ -28,7 +28,7 @@
 
 
 @protocol FilteredAppListDelegate <NSObject>
-- (FilteredListType)filteredListTypeWithIdentifier:(NSString *)identifier;
+- (FilteredListType)filteredListTypeForIdentifier:(NSString *)identifier;
 - (void)didSelectRowAtCell:(FilteredAppListCell *)cell;
 @optional
 - (BOOL)isOtherFilteredForIdentifier:(NSString *)identifier;

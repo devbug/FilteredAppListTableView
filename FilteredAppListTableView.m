@@ -172,7 +172,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	cell.enableForceType = enableForceType;
 	cell.displayId = identifier;
 	
-	cell.filteredListType = [delegate filteredListTypeWithIdentifier:identifier];
+	cell.filteredListType = [delegate filteredListTypeForIdentifier:identifier];
 	
 	return cell;
 }
