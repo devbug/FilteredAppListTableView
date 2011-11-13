@@ -88,13 +88,15 @@ NSArray *applicationDisplayIdentifiersForMode(FilteredAppType type)
 	for (NSArray *array in [NSArray arrayWithObjects:nonhidden, hidden, nil]) {
 		for (NSString *identifier in array) {
 			FilteredAppType isType = FilteredAppUsers;
-			for (NSString *systemIdentifier in systemAppArr) {
-				if ([identifier isEqualToString:@"com.apple.webapp"]) {
-					isType = FilteredAppWebapp;
-					break;
-				} else if ([identifier hasPrefix:systemIdentifier]) {
-					isType = FilteredAppSystem;
-					break;
+			
+			if ([identifier isEqualToString:@"com.apple.webapp"])
+				isType = FilteredAppWebapp;
+			else {
+				for (NSString *systemIdentifier in systemAppArr) {
+					 if ([identifier hasPrefix:systemIdentifier]) {
+						isType = FilteredAppSystem;
+						break;
+					}
 				}
 			}
 			
