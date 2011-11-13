@@ -24,7 +24,7 @@
 //
 
 #import "FilteredAppListTableView.h"
-#import "../MBProgressHUD/MBProgressHUD.h"
+#import "MBProgressHUD/MBProgressHUD.h"
 
 
 #define HUD_TAG		998
