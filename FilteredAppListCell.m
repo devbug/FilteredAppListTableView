@@ -157,6 +157,8 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 		
 		UIImage *icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultAppIcon~iphone.png"];
 		if (icon == nil)
+			icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultAppIcon~ipad.png"];
+		if (icon == nil)
 			icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultAppIcon.png"];
 		self.imageView.image = icon;
 		[icon release];

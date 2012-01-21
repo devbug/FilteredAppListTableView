@@ -68,7 +68,8 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 		
 		window = [[UIApplication sharedApplication] keyWindow];
 		
-		tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height-64) style:UITableViewStylePlain];
+		tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height) style:UITableViewStylePlain];
+		tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		[tableView setDelegate:self];
 		[tableView setDataSource:self];
 	}
