@@ -51,7 +51,7 @@
 
 typedef NSUInteger FilteredAppType;
 enum {
-	FilteredAppUsers	= 1,
+	FilteredAppUsers	= 1 << 0,
 	FilteredAppSystem	= 1 << 1,
 	FilteredAppWebapp	= 1 << 2,
 	FilteredAppAll		= 0xFFFFFFFF
