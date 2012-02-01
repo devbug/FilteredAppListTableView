@@ -170,41 +170,45 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 
 - (void)loadIcon {
 	if (!isIconLoaded && displayId != nil) {
-		NSThread *loadThread = [[NSThread alloc] initWithTarget:self selector:@selector(setIcon) object:nil];
-		[loadThread start];
-		[loadThread release];
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			UIImage *icon = nil;
+			
+			if (displayId == nil) return;
+			
+			if (isFirmware3x) {
+				// Firmware < 4.0
+				NSString *iconPath = SBSCopyIconImagePathForDisplayIdentifier(displayId);
+				if (iconPath != nil) {
+					icon = [[UIImage alloc] initWithContentsOfFile:iconPath];
+					[iconPath release];
+				}
+			} else {
+				// Firmware >= 4.0
+				if (SBSCopyIconImagePNGDataForDisplayIdentifier != NULL) {
+					NSData *data = (*SBSCopyIconImagePNGDataForDisplayIdentifier)(displayId);
+					if (data != nil) {
+						icon = [[UIImage alloc] initWithData:data];
+						[data release];
+					}
+				}
+			}
+			
+			if (icon) {
+				isIconLoaded = YES;
+				
+				[self setIcon:icon];
+				[icon release];
+			}
+		});
 	}
 }
 
-- (void)setIcon {
-	UIImage *icon = nil;
-	
-	if (displayId == nil) return;
-	
-	if (isFirmware3x) {
-		// Firmware < 4.0
-		NSString *iconPath = SBSCopyIconImagePathForDisplayIdentifier(displayId);
-		if (iconPath != nil) {
-			icon = [[UIImage alloc] initWithContentsOfFile:iconPath];
-			[iconPath release];
+- (void)setIcon:(UIImage *)icon {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		if (icon) {
+			self.imageView.image = icon;
 		}
-	} else {
-		// Firmware >= 4.0
-		if (SBSCopyIconImagePNGDataForDisplayIdentifier != NULL) {
-			NSData *data = (*SBSCopyIconImagePNGDataForDisplayIdentifier)(displayId);
-			if (data != nil) {
-				icon = [[UIImage alloc] initWithData:data];
-				[data release];
-			}
-		}
-	}
-	
-	if (icon) {
-		self.imageView.image = icon;
-		[icon release];
-		
-		isIconLoaded = YES;
-	}
+	});
 }
 
 - (FilteredListType)toggle {

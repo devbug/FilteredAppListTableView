@@ -75,7 +75,7 @@ enum {
 @property (nonatomic, retain) UIColor *forceTextColor;
 
 - (void)loadIcon;
-- (void)setIcon;
+- (void)setIcon:(UIImage *)icon;
 - (FilteredListType)toggle;
 - (void)setDefaultTextColor;
 - (void)setTextColors:(UIColor *)noneColor normalTextColor:(UIColor *)normalColor forceTextColor:(UIColor *)forceColor;
