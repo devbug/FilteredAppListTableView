@@ -27,8 +27,6 @@
 #import "MBProgressHUD/MBProgressHUD.h"
 
 
-#define HUD_TAG		998
-
 
 extern NSInteger compareDisplayNames(NSString *a, NSString *b, void *context);
 extern NSArray *applicationDisplayIdentifiersForMode(FilteredAppType type);
@@ -37,6 +35,8 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 
 
 @interface FilteredAppListTableView ()
+@property (nonatomic) NSInteger hudTag;
+
 - (void)loadInstalledAppData;
 - (id)makeCell:(NSString *)identifier;
 
@@ -55,6 +55,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 @synthesize tableView, delegate, filteredAppType, enableForceType;
 @synthesize hudLabelText, hudDetailsLabelText;
 @synthesize noneTextColor, normalTextColor, forceTextColor;
+@synthesize hudTag;
 
 - (id)initForContentSize:(CGSize)size delegate:(id<FilteredAppListDelegate>)_delegate filteredAppType:(FilteredAppType)type enableForce:(BOOL)enableForce {
 	if ((self = [super init]) != nil) {
@@ -65,6 +66,9 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 		self.hudLabelText = @"Loading Data";
 		self.hudDetailsLabelText = @"Please wait...";
 		[self setDefaultTextColor];
+		
+		srand(time(NULL));
+		self.hudTag = rand() % 200000;
 		
 		window = [[UIApplication sharedApplication] keyWindow];
 		
@@ -94,7 +98,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 }
 
 - (void)dealloc {
-	MBProgressHUD *HUD = (MBProgressHUD *)[window viewWithTag:HUD_TAG];
+	MBProgressHUD *HUD = (MBProgressHUD *)[window viewWithTag:self.hudTag];
 	[HUD removeFromSuperview];
 	
 	[tableView release];
@@ -112,7 +116,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 
 - (void)loadFilteredList {
 	MBProgressHUD *HUD = nil;
-	if ((HUD = (MBProgressHUD *)[window viewWithTag:HUD_TAG]) == nil) {
+	if ((HUD = (MBProgressHUD *)[window viewWithTag:self.hudTag]) == nil) {
 		HUD = [[MBProgressHUD alloc] initWithView:window];
 		[window addSubview:HUD];
 	}
@@ -120,7 +124,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	HUD.detailsLabelText = hudDetailsLabelText;
 	HUD.labelFont = [UIFont fontWithName:@"Helvetica" size:24];
 	HUD.detailsLabelFont = [UIFont fontWithName:@"Helvetica" size:18];
-	HUD.tag = HUD_TAG;
+	HUD.tag = self.hudTag;
 	[HUD show:YES];
 	[HUD release];
 	
@@ -178,7 +182,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	[tableView setDataSource:self];
 	[tableView reloadData];
 	
-	MBProgressHUD *HUD = (MBProgressHUD *)[window viewWithTag:HUD_TAG];
+	MBProgressHUD *HUD = (MBProgressHUD *)[window viewWithTag:self.hudTag];
 	[HUD hide:YES];
 	
 	[pool release];
