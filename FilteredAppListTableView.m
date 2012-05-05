@@ -119,6 +119,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	if ((HUD = (MBProgressHUD *)[window viewWithTag:self.hudTag]) == nil) {
 		HUD = [[MBProgressHUD alloc] initWithView:window];
 		[window addSubview:HUD];
+		[HUD release];
 	}
 	HUD.labelText = hudLabelText;
 	HUD.detailsLabelText = hudDetailsLabelText;
@@ -126,7 +127,6 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	HUD.detailsLabelFont = [UIFont fontWithName:@"Helvetica" size:18];
 	HUD.tag = self.hudTag;
 	[HUD show:YES];
-	[HUD release];
 	
 	[self performSelector:@selector(loadInstalledAppData) withObject:nil afterDelay:0.1f];
 }
