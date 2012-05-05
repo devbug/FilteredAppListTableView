@@ -51,17 +51,18 @@
 
 typedef NSUInteger FilteredAppType;
 enum {
-	FilteredAppUsers	= 1 << 0,
-	FilteredAppSystem	= 1 << 1,
-	FilteredAppWebapp	= 1 << 2,
-	FilteredAppAll		= 0xFFFFFFFF
+	FilteredAppUsers			= 1 << 0,
+	FilteredAppSystem			= 1 << 1,
+	FilteredAppWebapp			= 1 << 2,
+	FilteredAppAll				= 0xFFFFFFFF
 };
 
 typedef NSInteger FilteredListType;
 enum {
-	FilteredListNone	= 0,
-	FilteredListNormal	= 1,
-	FilteredListForce	= 2
+	FilteredListNone			= 0,
+	FilteredListNormal			= 1,
+	FilteredListForce			= 2,
+	FilteredListUserDefine		= 3
 };
 
 @interface FilteredAppListCell : UITableViewCell

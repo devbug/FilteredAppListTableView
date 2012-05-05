@@ -260,9 +260,9 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 			self.textLabel.textColor = forceTextColor;
 			break;
 		case FilteredListNone:
-		default:
 			self.accessoryType = UITableViewCellAccessoryNone;
 			self.textLabel.textColor = noneTextColor;
+		default:
 			break;
 	}
 }
