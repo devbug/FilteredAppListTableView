@@ -74,7 +74,9 @@ enum {
 @property (nonatomic, retain) UIColor *noneTextColor;
 @property (nonatomic, retain) UIColor *normalTextColor;
 @property (nonatomic, retain) UIColor *forceTextColor;
+@property (nonatomic) float iconMargin;
 
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier andDisplayId:(NSString *)displayIdentifier;
 - (void)loadIcon;
 - (void)setIcon:(UIImage *)icon;
 - (FilteredListType)toggle;

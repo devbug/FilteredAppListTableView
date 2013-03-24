@@ -2,7 +2,7 @@
 //  FilteredAppListTableView.m
 //  
 //  
-//  Copyright (c) 2011 deVbug
+//  Copyright (c) 2011-2013 deVbug
 //  
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,12 @@
 //
 
 #import "FilteredAppListTableView.h"
-#import "MBProgressHUD/MBProgressHUD.h"
+#import "../MBProgressHUD/MBProgressHUD.h"
 
 
 
 extern NSInteger compareDisplayNames(NSString *a, NSString *b, void *context);
-extern NSArray *applicationDisplayIdentifiersForMode(FilteredAppType type);
+extern NSArray *applicationDisplayIdentifiersForType(FilteredAppType type);
 extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *identifier);
 
 
@@ -56,6 +56,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 @synthesize hudLabelText, hudDetailsLabelText;
 @synthesize noneTextColor, normalTextColor, forceTextColor;
 @synthesize hudTag;
+@synthesize iconMargin;
 
 - (id)initForContentSize:(CGSize)size delegate:(id<FilteredAppListDelegate>)_delegate filteredAppType:(FilteredAppType)type enableForce:(BOOL)enableForce {
 	if ((self = [super init]) != nil) {
@@ -69,6 +70,8 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 		
 		srand(time(NULL));
 		self.hudTag = rand() % 200000;
+		
+		self.iconMargin = 4.0f;
 		
 		window = [[UIApplication sharedApplication] keyWindow];
 		
@@ -139,7 +142,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	[_list release];
 	_list = [[NSMutableArray alloc] init];
 	
-	NSSet *set = [NSSet setWithArray:applicationDisplayIdentifiersForMode(filteredAppType)];
+	NSSet *set = [NSSet setWithArray:applicationDisplayIdentifiersForType(filteredAppType)];
 	NSArray *sortedArray = [[set allObjects] sortedArrayUsingFunction:compareDisplayNames context:NULL];
 	
 	// http://pastebin.com/7YkT4dbk
@@ -191,6 +194,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 - (id)makeCell:(NSString *)identifier {
 	FilteredAppListCell *cell = [[[FilteredAppListCell alloc] initWithFrame:CGRectMake(0, 0, 100, 100) reuseIdentifier:@"FilteredListCell"] autorelease];
 	
+	cell.iconMargin = self.iconMargin;
 	cell.enableForceType = enableForceType;
 	cell.displayId = identifier;
 	[cell setTextColors:noneTextColor normalTextColor:normalTextColor forceTextColor:forceTextColor];

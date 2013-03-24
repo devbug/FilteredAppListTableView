@@ -2,7 +2,7 @@
 //  FilteredAppListTableView.h
 //  
 //  
-//  Copyright (c) 2011 deVbug
+//  Copyright (c) 2011-2013 deVbug
 //  
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -49,6 +49,7 @@
 @property (nonatomic, retain) UIColor *noneTextColor;
 @property (nonatomic, retain) UIColor *normalTextColor;
 @property (nonatomic, retain) UIColor *forceTextColor;
+@property (nonatomic) float iconMargin;
 
 - (id)initForContentSize:(CGSize)size delegate:(id<FilteredAppListDelegate>)delegate filteredAppType:(FilteredAppType)type enableForce:(BOOL)enableForce;
 - (UIView *)view;

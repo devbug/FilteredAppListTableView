@@ -66,7 +66,7 @@ NSInteger compareDisplayNames(NSString *a, NSString *b, void *context)
 	return ret;
 }
 
-NSArray *applicationDisplayIdentifiersForMode(FilteredAppType type)
+NSArray *applicationDisplayIdentifiersForType(FilteredAppType type)
 {
 	// Get list of non-hidden applications
 	NSArray *nonhidden = SBSCopyApplicationDisplayIdentifiers(NO, NO);
@@ -122,7 +122,7 @@ NSArray *applicationDisplayIdentifiersForMode(FilteredAppType type)
 
 NSArray *applicationDisplayIdentifiers()
 {
-	return applicationDisplayIdentifiersForMode(FilteredAppAll);
+	return applicationDisplayIdentifiersForType(FilteredAppAll);
 }
 
 
@@ -134,6 +134,7 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 
 @synthesize displayId, filteredListType, isIconLoaded, enableForceType;
 @synthesize noneTextColor, normalTextColor, forceTextColor;
+@synthesize iconMargin;
 
 + (void)initialize
 {
@@ -166,6 +167,37 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 		
 		filteredListType = FilteredListNone;
 	}
+}
+
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+	
+	if (self) {
+		self.iconMargin = 4.0f;
+	}
+	
+	return self;
+}
+
+- (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)reuseIdentifier {
+	self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier];
+	
+	if (self) {
+		self.iconMargin = 4.0f;
+	}
+	
+	return self;
+}
+
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier andDisplayId:(NSString *)displayIdentifier {
+	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+	
+	if (self) {
+		self.iconMargin = 4.0f;
+		[self setDisplayId:displayIdentifier];
+	}
+	
+	return self;
 }
 
 - (void)loadIcon {
@@ -247,7 +279,7 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 		[self setDefaultTextColor];
 	
 	CGSize size = self.bounds.size;
-	self.imageView.frame = CGRectMake(4.0f, 4.0f, size.height - 8.0f, size.height - 8.0f);
+	self.imageView.frame = CGRectMake(iconMargin, iconMargin, size.height - (iconMargin * 2), size.height - (iconMargin * 2));
 	self.imageView.contentMode = UIViewContentModeScaleAspectFit;
 	
 	switch (filteredListType) {
