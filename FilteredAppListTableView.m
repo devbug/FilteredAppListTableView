@@ -26,6 +26,8 @@
 #import "FilteredAppListTableView.h"
 #import "../MBProgressHUD/MBProgressHUD.h"
 
+#import <objc/runtime.h>
+
 
 
 extern NSInteger compareDisplayNames(NSString *a, NSString *b, void *context);
@@ -49,6 +51,8 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index;
 @end
 
+
+Class newHudClass;
 
 @implementation FilteredAppListTableView
 
@@ -74,6 +78,13 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 		
 		self.iconMargin = 4.0f;
 		self.cellStyle = UITableViewCellStyleDefault;
+		
+		char hudClassName[100] = "";
+		memset(hudClassName, 0, 100);
+		sprintf(hudClassName, "MBHud%dSubclass", self.hudTag);
+		
+		newHudClass = objc_allocateClassPair([MBProgressHUD class], hudClassName, 0);
+		objc_registerClassPair(newHudClass);
 		
 		window = [[UIApplication sharedApplication] keyWindow];
 		
@@ -122,7 +133,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 - (void)loadFilteredList {
 	MBProgressHUD *HUD = nil;
 	if ((HUD = (MBProgressHUD *)[window viewWithTag:self.hudTag]) == nil) {
-		HUD = [[MBProgressHUD alloc] initWithView:window];
+		HUD = (MBProgressHUD *)[[newHudClass alloc] initWithView:window];
 		[window addSubview:HUD];
 		[HUD release];
 	}
