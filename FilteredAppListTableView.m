@@ -57,6 +57,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 @synthesize noneTextColor, normalTextColor, forceTextColor;
 @synthesize hudTag;
 @synthesize iconMargin;
+@synthesize cellStyle;
 
 - (id)initForContentSize:(CGSize)size delegate:(id<FilteredAppListDelegate>)_delegate filteredAppType:(FilteredAppType)type enableForce:(BOOL)enableForce {
 	if ((self = [super init]) != nil) {
@@ -72,6 +73,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 		self.hudTag = rand() % 200000;
 		
 		self.iconMargin = 4.0f;
+		self.cellStyle = UITableViewCellStyleDefault;
 		
 		window = [[UIApplication sharedApplication] keyWindow];
 		
@@ -176,7 +178,9 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 			NSMutableArray *arr = [[_list objectAtIndex:[_list count]-1] objectForKey:@"data"];
 			if (arr == nil)
 				arr = [NSMutableArray array];
-			[arr addObject:[self makeCell:displayId]];
+			FilteredAppListCell *cell = [self makeCell:displayId];
+			[cell loadAndDelayedSetIcon];
+			[arr addObject:cell];
 			
 			[[_list objectAtIndex:[_list count]-1] setObject:arr forKey:@"data"];
 		}
@@ -192,7 +196,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 }
 
 - (id)makeCell:(NSString *)identifier {
-	FilteredAppListCell *cell = [[[FilteredAppListCell alloc] initWithFrame:CGRectMake(0, 0, 100, 100) reuseIdentifier:@"FilteredListCell"] autorelease];
+	FilteredAppListCell *cell = [[[FilteredAppListCell alloc] initWithStyle:self.cellStyle reuseIdentifier:@"FilteredAppListCell"] autorelease];
 	
 	cell.iconMargin = self.iconMargin;
 	cell.enableForceType = enableForceType;
@@ -236,10 +240,28 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	return index;
 }
 
-- (id)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	FilteredAppListCell *cell = (FilteredAppListCell *)[[[_list objectAtIndex:indexPath.section] objectForKey:@"data"] objectAtIndex:indexPath.row];
+- (id)tableView:(UITableView *)_tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	FilteredAppListCell *cachedCell = (FilteredAppListCell *)[[[_list objectAtIndex:indexPath.section] objectForKey:@"data"] objectAtIndex:indexPath.row];
 	
-	[cell loadIcon];
+	FilteredAppListCell *cell = (FilteredAppListCell *)[_tableView dequeueReusableCellWithIdentifier:@"FilteredAppListCell"];
+	if (cell == nil) {
+		cell = [self makeCell:cachedCell.displayId];
+	} else {
+		cell.enableForceType = enableForceType;
+		cell.displayId = cachedCell.displayId;
+		[cell setTextColors:noneTextColor normalTextColor:normalTextColor forceTextColor:forceTextColor];
+		
+		cell.filteredListType = [delegate filteredListTypeForIdentifier:cachedCell.displayId];
+	}
+	
+	if (!cachedCell.isIconLoaded) {
+		[cachedCell loadAndDelayedSetIcon];
+		[cell loadIcon];
+	} else {
+		UIImage *icon = [cachedCell.imageView.image copy];
+		[cell setIcon:icon];
+		[icon release];
+	}
 	
 	return cell;
 }

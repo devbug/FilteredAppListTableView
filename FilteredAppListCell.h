@@ -78,6 +78,7 @@ enum {
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier andDisplayId:(NSString *)displayIdentifier;
 - (void)loadIcon;
+- (void)loadAndDelayedSetIcon;
 - (void)setIcon:(UIImage *)icon;
 - (FilteredListType)toggle;
 - (void)setDefaultTextColor;

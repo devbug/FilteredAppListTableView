@@ -50,6 +50,7 @@
 @property (nonatomic, retain) UIColor *normalTextColor;
 @property (nonatomic, retain) UIColor *forceTextColor;
 @property (nonatomic) float iconMargin;
+@property (nonatomic) UITableViewCellStyle cellStyle;
 
 - (id)initForContentSize:(CGSize)size delegate:(id<FilteredAppListDelegate>)delegate filteredAppType:(FilteredAppType)type enableForce:(BOOL)enableForce;
 - (UIView *)view;
