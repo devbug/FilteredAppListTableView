@@ -89,7 +89,7 @@ NSArray *applicationDisplayIdentifiersForType(FilteredAppType type)
 		for (NSString *identifier in array) {
 			FilteredAppType isType = FilteredAppUsers;
 			
-			if ([identifier isEqualToString:@"com.apple.webapp"])
+			if ([identifier hasPrefix:@"com.apple.webapp"])
 				isType = FilteredAppWebapp;
 			else {
 				for (NSString *systemIdentifier in systemAppArr) {

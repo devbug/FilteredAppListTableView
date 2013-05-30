@@ -170,18 +170,26 @@ Class newHudClass;
 		
 		NSString *name = SBSCopyLocalizedApplicationNameForDisplayIdentifier(displayId);
 		
-		if (name) {
-			temp = [[name uppercaseString] characterAtIndex:0];
-			[name release];
-			
-			if(0xAC00 <= temp && temp <= 0xD7AF) {
-				unsigned int choSung = (temp - 0xAC00) / (21*28);
-				temp = [[choCharset substringWithRange:NSMakeRange(choSung, 1)] characterAtIndex:0];
+		if (name && name.length > 0 && strlen([name UTF8String]) > 0) {
+			@try {
+				temp = [[name uppercaseString] characterAtIndex:0];
+				[name release];
+				
+				if(0xAC00 <= temp && temp <= 0xD7AF) {
+					unsigned int choSung = (temp - 0xAC00) / (21*28);
+					temp = [[choCharset substringWithRange:NSMakeRange(choSung, 1)] characterAtIndex:0];
+				}
+				
+				if (header != temp) {
+					header = temp;
+					[_list addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithCharacters:&header length:1], @"section", nil]];
+				}
 			}
-			
-			if (header != temp) {
-				header = temp;
-				[_list addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithCharacters:&header length:1], @"section", nil]];
+			@catch (NSException *e) {
+				//
+			}
+			@finally {
+				//
 			}
 		}
 		
