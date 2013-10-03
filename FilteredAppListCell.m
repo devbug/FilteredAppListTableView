@@ -161,11 +161,15 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 			icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultAppIcon~ipad.png"];
 		if (icon == nil)
 			icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultAppIcon.png"];
+		if (icon == nil)
+			icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultIcon.png"];
 		self.imageView.image = icon;
 		[icon release];
 		isIconLoaded = NO;
 		
 		filteredListType = FilteredListNone;
+		
+		[self setNeedsLayout];
 	}
 }
 
@@ -266,6 +270,8 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 				self.imageView.image = icon;
 				[icon release];
 			}
+			
+			[self setNeedsLayout];
 		});
 	}
 }
@@ -275,6 +281,8 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 		if (icon) {
 			self.imageView.image = icon;
 		}
+		
+		[self setNeedsLayout];
 	});
 }
 
