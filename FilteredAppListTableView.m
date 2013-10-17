@@ -160,7 +160,7 @@ Class newHudClass;
 	
 	// http://pastebin.com/7YkT4dbk
 	// 한글 로마자 변환 프로그램 by 동성
-	NSString *choCharset = @"ㄱㄲㄴㄷㄸㄹㅁㅂㅃᄉㅆㅇㅈㅉㅊㅋㅌㅍㅎ";
+	NSString *choCharset = @"ㄱㄲㄴㄷㄸㄹㅁㅂㅃᄉㅆᄋㅈㅉㅊㅋㅌㅍㅎ";
 	
 	unichar header = ' ', temp;
 	for (NSString *displayId in sortedArray) {
