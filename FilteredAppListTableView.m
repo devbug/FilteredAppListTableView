@@ -158,9 +158,34 @@ Class newHudClass;
 	NSSet *set = [NSSet setWithArray:applicationDisplayIdentifiersForType(filteredAppType)];
 	NSArray *sortedArray = [[set allObjects] sortedArrayUsingFunction:compareDisplayNames context:NULL];
 	
+	/**
+	 * 0x3131 = 'ㄱ'    0x1100 = 'ᄀ'
+	 * 0x3132 = 'ㄲ'    0x1101 = 'ᄁ'
+	 * 0x3134 = 'ㄴ'    0x1102 = 'ᄂ'
+	 * 0x3137 = 'ㄷ'    0x1103 = 'ᄃ'
+	 * 0x3138 = 'ㄸ'    0x1104 = 'ᄄ'
+	 * 0x3139 = 'ㄹ'    0x1105 = 'ᄅ'
+	 * 0x3141 = 'ㅁ'    0x1106 = 'ᄆ'
+	 * 0x3142 = 'ㅂ'    0x1107 = 'ᄇ'
+	 * 0x3143 = 'ㅃ'    0x1108 = 'ᄈ'
+	 * 0x3145 = 'ㅅ'    0x1109 = 'ᄉ'
+	 * 0x3146 = 'ㅆ'    0x110A = 'ᄊ'
+	 * 0x3147 = 'ㅇ'    0x110B = 'ᄋ'
+	 * 0x3148 = 'ㅈ'    0x110C = 'ᄌ'
+	 * 0x3149 = 'ㅉ'    0x110D = 'ᄍ'
+	 * 0x314A = 'ㅊ'    0x110E = 'ᄎ'
+	 * 0x314B = 'ㅋ'    0x110F = 'ᄏ'
+	 * 0x314C = 'ㅌ'    0x1110 = 'ᄐ'
+	 * 0x314D = 'ㅍ'    0x1111 = 'ᄑ'
+	 * 0x314E = 'ㅎ'    0x1112 = 'ᄒ'
+	 * 
+	 * 0x3131 : ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ
+	 * 0x1100 : ᄀᄁᄂᄃᄄᄅᄆᄇᄈᄉᄊᄋᄌᄍᄎᄏᄐᄑᄒ
+	 **/
+	
 	// http://pastebin.com/7YkT4dbk
 	// 한글 로마자 변환 프로그램 by 동성
-	NSString *choCharset = @"ㄱㄲㄴㄷㄸㄹㅁㅂㅃᄉㅆᄋㅈㅉㅊㅋㅌㅍㅎ";
+	NSString *choCharset = @"ᄀᄁᄂᄃᄄᄅᄆᄇᄈᄉᄊᄋᄌᄍᄎᄏᄐᄑᄒ";
 	
 	unichar header = ' ', temp;
 	for (NSString *displayId in sortedArray) {
