@@ -49,6 +49,8 @@
 #include <dlfcn.h>
 
 
+#define kDefaultIconMargin		6.0f
+
 typedef NSUInteger FilteredAppType;
 enum {
 	FilteredAppUsers			= 1 << 0,

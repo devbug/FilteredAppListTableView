@@ -181,7 +181,7 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 	
 	if (self) {
-		self.iconMargin = 4.0f;
+		self.iconMargin = kDefaultIconMargin;
 	}
 	
 	return self;
@@ -191,7 +191,7 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 	self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier];
 	
 	if (self) {
-		self.iconMargin = 4.0f;
+		self.iconMargin = kDefaultIconMargin;
 	}
 	
 	return self;
@@ -201,7 +201,7 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 	
 	if (self) {
-		self.iconMargin = 4.0f;
+		self.iconMargin = kDefaultIconMargin;
 		[self setDisplayId:displayIdentifier];
 	}
 	
