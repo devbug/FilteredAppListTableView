@@ -245,7 +245,7 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 
 - (void)loadAndDelayedSetIcon {
 	if (!isIconLoaded && displayId != nil) {
-		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			UIImage *icon = nil;
 			
 			if (displayId == nil) return;
