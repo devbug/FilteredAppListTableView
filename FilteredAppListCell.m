@@ -161,8 +161,12 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 			icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultAppIcon~ipad.png"];
 		if (icon == nil)
 			icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultAppIcon.png"];
-		if (icon == nil)
-			icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultIcon.png"];
+		if (icon == nil) {
+			if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
+				icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultIcon-40.png"];
+			else
+				icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultIcon-29.png"];
+		}
 		self.imageView.image = icon;
 		[icon release];
 		isIconLoaded = NO;
@@ -316,13 +320,33 @@ static NSData * (*SBSCopyIconImagePNGDataForDisplayIdentifier)(NSString *identif
 }
 
 - (void)layoutSubviews {
+	// >= 7.0
+	BOOL isFirmware70 = [self respondsToSelector:@selector(separatorInset)];
+	UIImage *image = nil;
+	if (isFirmware70 && self.imageView.image) {
+		image = [self.imageView.image copy];
+		UIImage *icon = nil;
+		if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
+			icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultIcon-40.png"];
+		else
+			icon = [[UIImage alloc] initWithContentsOfFile:@"/System/Library/PrivateFrameworks/MobileIcons.framework/DefaultIcon-29.png"];
+		self.imageView.image = icon;
+		[icon release];
+	}
+	
 	[super layoutSubviews];
+	
+	if (image) {
+		self.imageView.image = image;
+		[image release];
+	}
 	
 	if (noneTextColor == nil || normalTextColor == nil || forceTextColor == nil)
 		[self setDefaultTextColor];
 	
 	CGSize size = self.bounds.size;
-	self.imageView.frame = CGRectMake(iconMargin, iconMargin, size.height - (iconMargin * 2), size.height - (iconMargin * 2));
+	float leftMargin = (isFirmware70 ? ((self.textLabel.frame.origin.x - (size.height - (iconMargin * 2))) / 2.0) : iconMargin);
+	self.imageView.frame = CGRectMake(leftMargin, iconMargin, size.height - (iconMargin * 2), size.height - (iconMargin * 2));
 	self.imageView.contentMode = UIViewContentModeScaleAspectFit;
 	
 	switch (filteredListType) {
