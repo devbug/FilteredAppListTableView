@@ -81,7 +81,7 @@ Class newHudClass;
 		
 		char hudClassName[100] = "";
 		memset(hudClassName, 0, 100);
-		sprintf(hudClassName, "MBHud%dSubclass", self.hudTag);
+		sprintf(hudClassName, "MBHud%ldSubclass", (long)self.hudTag);
 		
 		newHudClass = objc_allocateClassPair([MBProgressHUD class], hudClassName, 0);
 		objc_registerClassPair(newHudClass);
