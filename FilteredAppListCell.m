@@ -51,7 +51,7 @@
 extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *identifier);
 extern NSString * SBSCopyIconImagePathForDisplayIdentifier(NSString *identifier);
 extern NSArray * SBSCopyApplicationDisplayIdentifiers(BOOL activeOnly, BOOL unknown);
-extern CFSetRef SBSCopyDisplayIdentifiers();
+static CFSetRef (*pSBSCopyDisplayIdentifiers)() = NULL;
 
 
 NSInteger compareDisplayNames(NSString *a, NSString *b, void *context)
@@ -69,8 +69,11 @@ NSInteger compareDisplayNames(NSString *a, NSString *b, void *context)
 
 NSArray *applicationDisplayIdentifiersForType(FilteredAppType type)
 {
+	if (pSBSCopyDisplayIdentifiers == NULL)
+		pSBSCopyDisplayIdentifiers = dlsym(RTLD_DEFAULT, "SBSCopyDisplayIdentifiers");
+	
 	// Get list of non-hidden applications
-	NSArray *nonhidden = (NSArray *)SBSCopyDisplayIdentifiers();
+	NSArray *nonhidden = (pSBSCopyDisplayIdentifiers != NULL ? (NSArray *)(*pSBSCopyDisplayIdentifiers)() : SBSCopyApplicationDisplayIdentifiers(NO, NO));
 	
 	// Get list of hidden applications (assuming LibHide is installed)
 	NSArray *hidden = nil;
