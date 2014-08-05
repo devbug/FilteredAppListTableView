@@ -45,6 +45,7 @@
 - (void)beginUpdates;
 - (void)updateSpecifiersInRange:(NSRange)arg1 withSpecifiers:(id)arg2;
 - (void)updateSpecifiers:(id)arg1 withSpecifiers:(id)arg2;
+- (UITableView *)table;
 @end
 
 @interface PSListController (Firmware60)
@@ -58,11 +59,11 @@
 - (NSInteger)indexForIndexPath:(NSIndexPath *)arg1;
 - (NSIndexPath *)indexPathForSpecifier:(PSSpecifier *)arg1;
 - (NSIndexPath *)indexPathForIndex:(NSInteger)arg1;
-- (id)table;
 @end
 
 @interface PSListController (Firmware70)
 - (void)lazyLoadBundle:(id)arg1;
+- (void)viewDidLayoutSubviews;
 @end
 
 
@@ -239,6 +240,9 @@ extern NSString *PSValidValuesKey; // validValues
 extern NSString *PSValueChangedNotificationKey; // PostNotification
 extern NSString *PSValueKey; // value
 extern NSString *PSValuesDataSourceKey; // valuesDataSource
+
+
+extern BOOL PSIsiPad() NS_AVAILABLE_IOS(6_0);
 
 
 

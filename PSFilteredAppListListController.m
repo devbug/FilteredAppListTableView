@@ -182,6 +182,10 @@ NSArray *applicationDisplayIdentifiers() {
 	}
 }
 
+- (BOOL)edgeToEdgeCells {
+	return YES;
+}
+
 
 - (Class)tableViewClass {
 	return [PSFilteredAppListTableView class];
