@@ -335,12 +335,14 @@ NSArray *applicationDisplayIdentifiers() {
 
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
 	Class UIBackdropView = objc_getClass("_UIBackdropView");
-	if ([view isKindOfClass:[UITableViewHeaderFooterView class]] && UIBackdropView != Nil) {
+	Class HeaderFooterView = objc_getClass("UITableViewHeaderFooterView");
+	if (HeaderFooterView != Nil && [view isKindOfClass:HeaderFooterView] && UIBackdropView != Nil) {
 		UITableViewHeaderFooterView *tableViewHeaderFooterView = (UITableViewHeaderFooterView *)view;
 		if (![tableViewHeaderFooterView.backgroundView isKindOfClass:UIBackdropView]) {
 			tableViewHeaderFooterView.contentView.backgroundColor = [UIColor clearColor];
-			tableViewHeaderFooterView.backgroundImage = nil;
 			tableViewHeaderFooterView.tintColor = nil;
+			if ([tableViewHeaderFooterView respondsToSelector:@selector(setBackgroundImage:)])
+				tableViewHeaderFooterView.backgroundImage = nil;
 			
 			_UIBackdropViewSettings *settings = [objc_getClass("_UIBackdropViewSettings") settingsForStyle:2020 graphicsQuality:100];
 			settings.blurRadius = 5.0f;
