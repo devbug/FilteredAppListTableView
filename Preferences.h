@@ -3,6 +3,9 @@
 
 
 
+#ifndef __D_PREFERENCES_HEADERS__
+#define __D_PREFERENCES_HEADERS__
+
 
 @interface PSViewController (Firmware32)
 - (void)loadView;
@@ -239,38 +242,4 @@ extern NSString *PSValuesDataSourceKey; // valuesDataSource
 
 
 
-@interface PSdeVbugListController : PSListController
-@property (nonatomic, copy) NSString *_title;
-- (void)setPreferenceNumberValue:(NSNumber *)value specifier:(PSSpecifier *)specifier;
-- (NSNumber *)getPreferenceNumberValue:(PSSpecifier *)specifier;
-@end
-
-
-@implementation PSdeVbugListController
-
-- (void)loadView {
-	[super loadView];
-	
-	if ([self respondsToSelector:@selector(navigationItem)]) {
-		[[self navigationItem] setTitle:self._title];
-	}
-}
-
-- (void)setTitle:(NSString *)title {
-	if (title) {
-		[super setTitle:title];
-		self._title = title;
-	}
-}
-
-- (void)setPreferenceNumberValue:(NSNumber *)value specifier:(PSSpecifier *)specifier {
-	[PSRootController setPreferenceValue:value specifier:specifier];
-}
-
-- (NSNumber *)getPreferenceNumberValue:(PSSpecifier *)specifier {
-	return [PSRootController readPreferenceValue:specifier];
-}
-
-@end
-
-
+#endif
