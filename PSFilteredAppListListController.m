@@ -344,8 +344,10 @@ NSArray *applicationDisplayIdentifiers() {
 			if ([tableViewHeaderFooterView respondsToSelector:@selector(setBackgroundImage:)])
 				tableViewHeaderFooterView.backgroundImage = nil;
 			
-			_UIBackdropViewSettings *settings = [objc_getClass("_UIBackdropViewSettings") settingsForStyle:2020 graphicsQuality:100];
+			_UIBackdropViewSettings *settings = [objc_getClass("_UIBackdropViewSettings") settingsForStyle:2020];
 			settings.blurRadius = 5.0f;
+			settings.grayscaleTintAlpha = 0.0f;
+			settings.grayscaleTintLevel = 1.0f;
 			_UIBackdropView *backdropView = [[UIBackdropView alloc] initWithSettings:settings];
 			backdropView.appliesOutputSettingsAnimationDuration = 0.0f;
 			backdropView.computesColorSettings = NO;
@@ -361,6 +363,8 @@ NSArray *applicationDisplayIdentifiers() {
 	PSFilteredAppListCell *cell = (PSFilteredAppListCell *)[self.table cellForRowAtIndexPath:indexPath];
 	
 	[cell toggle];
+	
+	[self.table deselectRowAtIndexPath:indexPath animated:YES];
 	
 	if (_enableForceType == NO && cell.filteredListType == FilteredListForce) return NO;
 	
