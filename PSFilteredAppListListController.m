@@ -143,6 +143,7 @@ NSArray *applicationDisplayIdentifiers() {
 @interface PSFilteredAppListListController ()
 @property (nonatomic, retain) NSMutableArray *indexes;
 @property (nonatomic) BOOL isNeedsToReload;
+@property (nonatomic, copy) NSString *_title;
 @end
 
 
@@ -165,6 +166,7 @@ NSArray *applicationDisplayIdentifiers() {
 	self.normalTextColor = nil;
 	self.forceTextColor = nil;
 	self.indexes = nil;
+	self._title = nil;
 	
 	[super dealloc];
 }
@@ -184,6 +186,12 @@ NSArray *applicationDisplayIdentifiers() {
 
 - (BOOL)edgeToEdgeCells {
 	return YES;
+}
+
+- (void)setTitle:(NSString *)title {
+	[super setTitle:title];
+	if (title)
+		self._title = title;
 }
 
 
@@ -243,7 +251,7 @@ NSArray *applicationDisplayIdentifiers() {
 					temp = [[name uppercaseString] characterAtIndex:0];
 					[name release];
 					
-					if(0xAC00 <= temp && temp <= 0xD7AF) {
+					if (0xAC00 <= temp && temp <= 0xD7AF) {
 						unsigned int choSung = (temp - 0xAC00) / (21*28);
 						temp = [[choCharset substringWithRange:NSMakeRange(choSung, 1)] characterAtIndex:0];
 					}
@@ -293,8 +301,17 @@ NSArray *applicationDisplayIdentifiers() {
 	[specifier setProperty:_noneTextColor forKey:@"noneTextColor"];
 	[specifier setProperty:_normalTextColor forKey:@"normalTextColor"];
 	[specifier setProperty:_forceTextColor forKey:@"forceTextColor"];
-	if (_delegate)
-		[specifier setProperty:@([_delegate filteredListTypeForIdentifier:displayId]) forKey:@"filteredListType"];
+	FilteredListType filteredListType = FilteredListNone;
+	if (_delegate) {
+		filteredListType = [_delegate filteredListTypeForIdentifier:displayId];
+	}
+	else if ([self.specifier propertyForKey:@"key"] && [self.specifier propertyForKey:@"defaults"]) {
+		NSArray *data = [PSRootController readPreferenceValue:self.specifier];
+		
+		if ([data containsObject:displayId])
+			filteredListType = FilteredListNormal;
+	}
+	[specifier setProperty:@(filteredListType) forKey:@"filteredListType"];
 	
 	return specifier;
 }
@@ -322,6 +339,7 @@ NSArray *applicationDisplayIdentifiers() {
 		
 		if (_isPopover) {
 			self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:_delegate action:@selector(closeAppListView)] autorelease];
+			self.navigationItem.title = self.title ?: self._title;
 		}
 	}
 	
@@ -372,7 +390,22 @@ NSArray *applicationDisplayIdentifiers() {
 	
 	if (_enableForceType == NO && cell.filteredListType == FilteredListForce) return NO;
 	
-	[_delegate didSelectRowAtCell:cell];
+	if (_delegate) {
+		[_delegate didSelectRowAtCell:cell];
+	}
+	else if ([self.specifier propertyForKey:@"key"] && [self.specifier propertyForKey:@"defaults"]) {
+		NSArray *data = [PSRootController readPreferenceValue:self.specifier];
+		NSMutableArray *datas = [NSMutableArray arrayWithArray:data];
+		
+		if (cell.filteredListType == FilteredListNone) {
+			[datas removeObject:cell.displayId];
+		}
+		else if (cell.filteredListType == FilteredListNormal) {
+			[datas addObject:cell.displayId];
+		}
+		
+		[PSRootController setPreferenceValue:datas specifier:self.specifier];
+	}
 	
 	return YES;
 }
