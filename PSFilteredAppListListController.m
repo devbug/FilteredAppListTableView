@@ -292,6 +292,7 @@ NSArray *applicationDisplayIdentifiers() {
 	[specifier setProperty:[PSFilteredAppListCell class] forKey:PSCellClassKey];
 	[specifier setProperty:@(YES) forKey:PSLazyIconLoading];
 	[specifier setProperty:displayId forKey:PSLazyIconAppID];
+	[specifier setProperty:@(YES) forKey:PSLazyIconDontUnload];
 	[specifier setProperty:@(YES) forKey:@"enabled"];
 	[specifier setProperty:@(1) forKey:PSAlignmentKey];
 	specifier.buttonAction = @selector(selectAppItem:);
