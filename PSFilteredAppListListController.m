@@ -367,7 +367,9 @@ NSArray *applicationDisplayIdentifiers() {
 			if ([tableViewHeaderFooterView respondsToSelector:@selector(setBackgroundImage:)])
 				tableViewHeaderFooterView.backgroundImage = nil;
 			
-			_UIBackdropView *backdropView = [[UIBackdropView alloc] initWithStyle:2070];
+			_UIBackdropViewSettings *settings = [objc_getClass("_UIBackdropViewSettings") settingsForStyle:2070];
+			settings.grayscaleTintAlpha = 0.0f;
+			_UIBackdropView *backdropView = [[UIBackdropView alloc] initWithSettings:settings];
 			backdropView.appliesOutputSettingsAnimationDuration = 0.0f;
 			backdropView.computesColorSettings = NO;
 			backdropView.simulatesMasks = YES;
