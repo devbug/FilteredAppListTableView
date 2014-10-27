@@ -52,6 +52,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 extern NSString * SBSCopyIconImagePathForDisplayIdentifier(NSString *identifier);
 extern NSArray * SBSCopyApplicationDisplayIdentifiers(BOOL activeOnly, BOOL unknown);
 static CFSetRef (*pSBSCopyDisplayIdentifiers)() = NULL;
+extern NSString *SBSCopyBundlePathForDisplayIdentifier(NSString *identifier);
 
 
 NSInteger compareDisplayNames(NSString *a, NSString *b, void *context)
@@ -82,11 +83,6 @@ NSArray *applicationDisplayIdentifiersForType(FilteredAppType type)
 	if ([value isKindOfClass:[NSArray class]])
 		hidden = (NSArray *)value;
 	
-	NSString *path = @"/var/mobile/Library/Caches/com.apple.mobile.installation.plist";
-	NSDictionary *cacheDict = [NSDictionary dictionaryWithContentsOfFile:path];
-	NSDictionary *systemApp = [cacheDict objectForKey:@"System"];
-	NSArray *systemAppArr = [systemApp allKeys];
-	
 	// Record list of valid identifiers
 	NSMutableArray *identifiers = [NSMutableArray array];
 	for (NSArray *array in [NSArray arrayWithObjects:nonhidden, hidden, nil]) {
@@ -96,12 +92,12 @@ NSArray *applicationDisplayIdentifiersForType(FilteredAppType type)
 			if ([identifier hasPrefix:@"com.apple.webapp"])
 				isType = FilteredAppWebapp;
 			else {
-				for (NSString *systemIdentifier in systemAppArr) {
-					 if ([identifier hasPrefix:systemIdentifier]) {
-						isType = FilteredAppSystem;
-						break;
-					}
-				}
+				NSString *path = SBSCopyBundlePathForDisplayIdentifier(identifier);
+				
+				if ([path hasPrefix:@"/Applications/"])
+					isType = FilteredAppSystem;
+				
+				[path release];
 			}
 			
 			if ((isType & type) == 0) continue;
