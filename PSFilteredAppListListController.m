@@ -375,7 +375,7 @@ NSArray *applicationDisplayIdentifiers() {
 	}
 }
 
-- (BOOL)selectAppItem:(PSSpecifier *)specifier {
+- (void)selectAppItem:(PSSpecifier *)specifier {
 	NSIndexPath *indexPath = [self indexPathForSpecifier:specifier];
 	PSFilteredAppListCell *cell = (PSFilteredAppListCell *)[self.table cellForRowAtIndexPath:indexPath];
 	
@@ -383,7 +383,7 @@ NSArray *applicationDisplayIdentifiers() {
 	
 	[self.table deselectRowAtIndexPath:indexPath animated:YES];
 	
-	if (_enableForceType == NO && cell.filteredListType == FilteredListForce) return NO;
+	if (_enableForceType == NO && cell.filteredListType == FilteredListForce) return;
 	
 	if (_delegate) {
 		[_delegate didSelectRowAtCell:cell];
@@ -401,8 +401,6 @@ NSArray *applicationDisplayIdentifiers() {
 		
 		[PSRootController setPreferenceValue:datas specifier:self.specifier];
 	}
-	
-	return YES;
 }
 
 
